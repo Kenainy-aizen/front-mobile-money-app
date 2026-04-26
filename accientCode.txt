@@ -1,0 +1,139 @@
+ {/* --- ROUTES PUBLIQUES (AUTHENTIFICATION) --- */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          {/* --- ROUTES PRIVÉES (GESTION MOBILE MONEY) --- */}
+          <Route 
+            path="/dashboard" 
+            element={<PrivateRoute><Dashboard /></PrivateRoute>} 
+          />
+          
+          {/* CRUD Clients [cite: 12] */}
+          <Route 
+            path="/clients" 
+            element={<PrivateRoute><ClientList /></PrivateRoute>} 
+          />
+          <Route 
+            path="/clients/nouveau" 
+            element={<PrivateRoute><CreateClient /></PrivateRoute>} 
+          />
+
+          {/* Opérations : Envoi et Retrait [cite: 7, 9] */}
+          <Route 
+            path="/operations/envoi" 
+            element={<PrivateRoute><EnvoiForm /></PrivateRoute>} 
+          />
+          <Route 
+            path="/operations/retrait" 
+            element={<PrivateRoute><RetraitForm /></PrivateRoute>} 
+          />
+
+          {/* État & Relevé PDF [cite: 15, 18] */}
+          <Route 
+            path="/releve" 
+            element={<PrivateRoute><ReleveMensuel /></PrivateRoute>} 
+          />
+
+          {/* Redirection par défaut */}
+
+
+
+
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { 
+  LayoutDashboard, Users, Send, Wallet, 
+  Settings, FileText, TrendingUp, LogOut 
+} from 'lucide-react';
+
+const Sidebar = () => {
+  const menuItems = [
+    { name: 'Dashboard', icon: <LayoutDashboard />, path: '/dashboard' },
+    { name: 'Clients', icon: <Users />, path: '/clients' },
+    { name: 'Envois', icon: <Send />, path: '/operations/envoi' },
+    { name: 'Retraits', icon: <Wallet />, path: '/operations/retrait' },
+    { name: 'Frais Envoi', icon: <TrendingUp />, path: '/frais/envoi' },
+    { name: 'Frais Retrait', icon: <Settings />, path: '/frais/retrait' },
+    { name: 'Relevé PDF', icon: <FileText />, path: '/releve' },
+  ];
+
+  return (
+    <div className="h-screen w-64 bg-[#1e293b] text-slate-300 flex flex-col shadow-xl">
+      {/* Header avec ton logo ou nom */}
+      <div className="p-6 text-white font-bold text-xl border-b border-slate-700 flex items-center gap-3">
+        <div className="bg-blue-500 p-2 rounded-lg"><Wallet size={20}/></div>
+        M-Money Pro
+      </div>
+
+      {/* Liens de Navigation */}
+      <nav className="flex-1 p-4 space-y-2">
+        {menuItems.map((item) => (
+          <NavLink
+            key={item.name}
+            to={item.path}
+            className={({ isActive }) => 
+              `flex items-center gap-4 p-3 rounded-xl transition-all ${
+                isActive 
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
+                : 'hover:bg-slate-800 hover:text-white'
+              }`
+            }
+          >
+            {item.icon}
+            <span className="font-medium">{item.name}</span>
+          </NavLink>
+        ))}
+      </nav>
+
+      {/* Bouton Déconnexion en bas */}
+      <div className="p-4 border-t border-slate-700">
+        <button 
+          onClick={() => { localStorage.clear(); window.location.reload(); }}
+          className="flex items-center gap-4 p-3 w-full rounded-xl hover:bg-red-500/10 text-red-400 transition-all"
+        >
+          <LogOut size={20} />
+          <span className="font-medium">Déconnexion</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default Sidebar;
+
+
+
+
+
+
+
+import Sidebar from './Sidebar';
+
+const Dashboard = () => {
+  return (
+    <div className="flex bg-[#0f172a] min-h-screen">
+      <Sidebar />
+      <main className="flex-1 p-8 overflow-y-auto">
+        {/* Ici viendront tes statistiques comme la Recette Totale */}
+        <header className="flex justify-between items-center mb-8 text-white">
+          <h1 className="text-2xl font-bold">Vue d'ensemble</h1>
+          <div className="flex items-center gap-4">
+             <span>Administrateur</span>
+             <div className="w-10 h-10 bg-slate-700 rounded-full"></div>
+          </div>
+        </header>
+
+        {/* Exemple de carte de statistiques */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-[#1e293b] p-6 rounded-2xl border border-slate-700 shadow-sm">
+            <p className="text-slate-400 text-sm">Recette Totale</p>
+            <h3 className="text-2xl font-bold text-white mt-1">1.250.000 Ar</h3>
+          </div>
+          {/* Ajoute d'autres cartes ici */}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default Dashboard;
