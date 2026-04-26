@@ -9,6 +9,17 @@ const ClientList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
   const token = localStorage.getItem('token');
+
+  const emptyClient = { numtel: '', nom: '', sexe: 'Masculin', age: '', solde: 0, mail: '' };
+  const [formData, setFormData] = useState(emptyClient);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const openAddModal = () => {
+    setIsEditMode(false);
+    setFormData(emptyClient);
+    setIsModalOpen(true);
+  };
+
   const fetchAllClients = async () => {
      try {
       
@@ -17,7 +28,6 @@ const ClientList = () => {
       });
 
       setClients(response.data.data);
-      console.log(response.data.data);
 
     } catch (err) { 
       toast.error("Erreur de connexion au serveur"); 
@@ -48,7 +58,7 @@ const ClientList = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `http://localhost:8080/api/clients/${editingClient.numtel}`, 
+        `http://localhost:8080/api/v1/clients/client/${editingClient.numtel}/update`, 
         editingClient, 
         {
           headers: {
@@ -93,6 +103,12 @@ const ClientList = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
+        <button 
+            onClick={openAddModal}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-lg shadow-blue-900/20 transition-all transform active:scale-95"
+          >
+            <Plus size={20} /> Nouveau
+          </button>
       </div>
 
       <div className="bg-[#1e293b] rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
@@ -101,6 +117,7 @@ const ClientList = () => {
             <tr>
               <th className="px-6 py-4">Nom & Contact</th>
               <th className="px-6 py-4">Sexe/Age</th>
+              <th className="px-6 py-4">Email</th>
               <th className="px-6 py-4 text-green-400">Solde</th>
               <th className="px-6 py-4 text-center">Actions</th>
             </tr>
@@ -113,6 +130,7 @@ const ClientList = () => {
                   <div className="text-slate-500 text-xs">{client.numtel}</div>
                 </td>
                 <td className="px-6 py-4 text-sm text-slate-400">{client.sexe}, {client.age} ans</td>
+                <td className="px-6 py-4 text-sm text-slate-400">{client.mail} </td>
                 <td className="px-6 py-4 font-mono font-bold text-green-500">{client.solde.toLocaleString()} Ar</td>
                 <td className="px-6 py-4">
                   <div className="flex justify-center gap-3">
