@@ -12,6 +12,8 @@ import EnvoiList from './pages/Operations/EnvoiList';
 import RetraitList from './pages/Operations/RetraitList';
 import FraisEnvoiList from './pages/Operations/FraisEnvoiList';
 import FraisRetraitList from './pages/Operations/FraisRetraitList';
+import ReleveClient from './pages/Operations/ReleveClient';
+import GlobalTransactionList from './pages/Operations/GlobalTransactionList';
   
 // Composant pour protéger les routes (nécessite une authentification)
 const PrivateRoute = ({ children }) => {
@@ -26,6 +28,18 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route path="/option" element={
+            <div className="flex justify-between">
+              <Sidebar />
+              <GlobalTransactionList />
+            </div>
+          } />
+          <Route path="/releve" element={
+            <div className="flex justify-between">
+              <Sidebar />
+              <ReleveClient />
+            </div>
+          } />
           <Route path="/fraisretrait" element={
             <div className="flex justify-between">
               <Sidebar />

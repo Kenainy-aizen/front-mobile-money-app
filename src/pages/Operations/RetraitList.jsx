@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Search, Download, X, Save, Calendar, Info, Edit, Trash2, Plus, User, Hash } from 'lucide-react';
+import { Search, Download, X, Save, Calendar, Info, Edit, Trash2, Plus, User, Hash, AlignLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const RetraitList = () => {
@@ -12,11 +12,12 @@ const RetraitList = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [retraitToDelete, setRetraitToDelete] = useState(null);
 
-  // Champ "raison" supprimé ici
+  // Ajout du champ "raison" dans l'objet initial
   const emptyRetrait = { 
     idrecep: null,
     numtel: '', 
-    montant: ''
+    montant: '',
+    raison: '' 
   };
   
   const [formData, setFormData] = useState(emptyRetrait);
@@ -54,11 +55,11 @@ const RetraitList = () => {
 
   const openEditModal = (retrait) => {
     setIsEditMode(true);
-    // On ne propage que les champs nécessaires
     setFormData({
       idrecep: retrait.idrecep,
       numtel: retrait.numtel,
       montant: retrait.montant,
+      raison: retrait.raison || '' // On récupère la raison existante
     });
     setIsModalOpen(true);
   };
@@ -101,7 +102,6 @@ const RetraitList = () => {
 
   return (
     <div className="ml-64 p-8 bg-[#0f172a] min-h-screen flex-1 text-slate-200">
-      {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Historique des Retraits</h1>
@@ -126,14 +126,13 @@ const RetraitList = () => {
         </div>
       </div>
 
-      {/* Tableau */}
       <div className="bg-[#1e293b] rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
         <table className="w-full text-left border-collapse">
           <thead className="bg-slate-800/50 text-slate-400 text-xs uppercase tracking-wider font-bold">
             <tr>
               <th className="px-6 py-4">Numéro Client</th>
               <th className="px-6 py-4 text-blue-400">Montant</th>
-              <th className="px-6 py-4">Code Transaction</th>
+              <th className="px-6 py-4">Raison</th> {/* Nouvelle colonne */}
               <th className="px-6 py-4">Date</th>
               <th className="px-6 py-4 text-center">Actions</th>
             </tr>
@@ -147,18 +146,13 @@ const RetraitList = () => {
                   </div>
                 </td>
                 <td className="px-6 py-4 font-bold text-blue-400">{retrait.montant.toLocaleString()} Ar</td>
-                <td className="px-6 py-4">
-                  <span className="bg-slate-900 px-2 py-1 rounded border border-slate-700 text-xs font-mono text-slate-300">
-                    {retrait.idrecep}
-                  </span>
+                <td className="px-6 py-4 text-xs text-slate-400 italic max-w-[150px] truncate">
+                  {retrait.raison || "---"} {/* Affichage raison */}
                 </td>
                 <td className="px-6 py-4 text-xs text-slate-400">
                   {new Date(retrait.daterecep).toLocaleString('fr-FR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+                    dateStyle: 'short',
+                    timeStyle: 'short'
                   })}
                 </td>
                 <td className="px-6 py-4">
@@ -173,7 +167,6 @@ const RetraitList = () => {
         </table>
       </div>
 
-      {/* Modale Formulaire */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-[#1e293b] w-full max-w-lg rounded-3xl border border-slate-700 shadow-2xl animate-in zoom-in duration-200">
@@ -194,12 +187,23 @@ const RetraitList = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-500 ml-1">Montant (Ar)</label>
-                  <input required type="number" value={formData.montant} className="w-full bg-[#0f172a] border border-slate-700 rounded-xl p-3 text-blue-400 font-bold outline-none focus:border-blue-500 text-lg" onChange={(e) => setFormData({...formData, montant: e.target.value})} />
+              <div>
+                <label className="text-[10px] uppercase font-bold text-slate-500 ml-1">Montant (Ar)</label>
+                <input required type="number" value={formData.montant} className="w-full bg-[#0f172a] border border-slate-700 rounded-xl p-3 text-blue-400 font-bold outline-none focus:border-blue-500 text-lg" onChange={(e) => setFormData({...formData, montant: e.target.value})} />
+              </div>
+
+              {/* Nouveau champ RAISON dans la modale */}
+              <div>
+                <label className="text-[10px] uppercase font-bold text-slate-500 ml-1">Raison du retrait</label>
+                <div className="relative">
+                  <AlignLeft size={18} className="absolute left-3 top-3 text-slate-500" />
+                  <textarea 
+                    value={formData.raison} 
+                    className="w-full bg-[#0f172a] border border-slate-700 rounded-xl p-3 pl-10 text-white outline-none focus:border-blue-500 h-24 resize-none" 
+                    onChange={(e) => setFormData({...formData, raison: e.target.value})} 
+                    placeholder="Ex: Retrait personnel, paiement fournisseur..."
+                  />
                 </div>
-               
               </div>
 
               <div className="pt-2">
@@ -216,7 +220,6 @@ const RetraitList = () => {
         </div>
       )}
 
-      {/* Modale Suppression */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
           <div className="bg-[#1e293b] w-full max-w-sm rounded-3xl border border-slate-700 shadow-2xl p-8 text-center animate-in zoom-in duration-200">
