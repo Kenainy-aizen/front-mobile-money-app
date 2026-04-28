@@ -1,167 +1,4 @@
- {/* --- ROUTES PUBLIQUES (AUTHENTIFICATION) --- */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-
-          {/* --- ROUTES PRIVÉES (GESTION MOBILE MONEY) --- */}
-          <Route 
-            path="/dashboard" 
-            element={<PrivateRoute><Dashboard /></PrivateRoute>} 
-          />
-          
-          {/* CRUD Clients [cite: 12] */}
-          <Route 
-            path="/clients" 
-            element={<PrivateRoute><ClientList /></PrivateRoute>} 
-          />
-          <Route 
-            path="/clients/nouveau" 
-            element={<PrivateRoute><CreateClient /></PrivateRoute>} 
-          />
-
-          {/* Opérations : Envoi et Retrait [cite: 7, 9] */}
-          <Route 
-            path="/operations/envoi" 
-            element={<PrivateRoute><EnvoiForm /></PrivateRoute>} 
-          />
-          <Route 
-            path="/operations/retrait" 
-            element={<PrivateRoute><RetraitForm /></PrivateRoute>} 
-          />
-
-          {/* État & Relevé PDF [cite: 15, 18] */}
-          <Route 
-            path="/releve" 
-            element={<PrivateRoute><ReleveMensuel /></PrivateRoute>} 
-          />
-
-          {/* Redirection par défaut */}
-
-
-
-
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, Users, Send, Wallet, 
-  Settings, FileText, TrendingUp, LogOut 
-} from 'lucide-react';
-
-const Sidebar = () => {
-  const menuItems = [
-    { name: 'Dashboard', icon: <LayoutDashboard />, path: '/dashboard' },
-    { name: 'Clients', icon: <Users />, path: '/clients' },
-    { name: 'Envois', icon: <Send />, path: '/operations/envoi' },
-    { name: 'Retraits', icon: <Wallet />, path: '/operations/retrait' },
-    { name: 'Frais Envoi', icon: <TrendingUp />, path: '/frais/envoi' },
-    { name: 'Frais Retrait', icon: <Settings />, path: '/frais/retrait' },
-    { name: 'Relevé PDF', icon: <FileText />, path: '/releve' },
-  ];
-
-  return (
-    <div className="h-screen w-64 bg-[#1e293b] text-slate-300 flex flex-col shadow-xl">
-      {/* Header avec ton logo ou nom */}
-      <div className="p-6 text-white font-bold text-xl border-b border-slate-700 flex items-center gap-3">
-        <div className="bg-blue-500 p-2 rounded-lg"><Wallet size={20}/></div>
-        M-Money Pro
-      </div>
-
-      {/* Liens de Navigation */}
-      <nav className="flex-1 p-4 space-y-2">
-        {menuItems.map((item) => (
-          <NavLink
-            key={item.name}
-            to={item.path}
-            className={({ isActive }) => 
-              `flex items-center gap-4 p-3 rounded-xl transition-all ${
-                isActive 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
-                : 'hover:bg-slate-800 hover:text-white'
-              }`
-            }
-          >
-            {item.icon}
-            <span className="font-medium">{item.name}</span>
-          </NavLink>
-        ))}
-      </nav>
-
-      {/* Bouton Déconnexion en bas */}
-      <div className="p-4 border-t border-slate-700">
-        <button 
-          onClick={() => { localStorage.clear(); window.location.reload(); }}
-          className="flex items-center gap-4 p-3 w-full rounded-xl hover:bg-red-500/10 text-red-400 transition-all"
-        >
-          <LogOut size={20} />
-          <span className="font-medium">Déconnexion</span>
-        </button>
-      </div>
-    </div>
-  );
-};
-
-export default Sidebar;
-
-
-
-
-
-
-
-import Sidebar from './Sidebar';
-
-const Dashboard = () => {
-  return (
-    <div className="flex bg-[#0f172a] min-h-screen">
-      <Sidebar />
-      <main className="flex-1 p-8 overflow-y-auto">
-        {/* Ici viendront tes statistiques comme la Recette Totale */}
-        <header className="flex justify-between items-center mb-8 text-white">
-          <h1 className="text-2xl font-bold">Vue d'ensemble</h1>
-          <div className="flex items-center gap-4">
-             <span>Administrateur</span>
-             <div className="w-10 h-10 bg-slate-700 rounded-full"></div>
-          </div>
-        </header>
-
-        {/* Exemple de carte de statistiques */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-[#1e293b] p-6 rounded-2xl border border-slate-700 shadow-sm">
-            <p className="text-slate-400 text-sm">Recette Totale</p>
-            <h3 className="text-2xl font-bold text-white mt-1">1.250.000 Ar</h3>
-          </div>
-          {/* Ajoute d'autres cartes ici */}
-        </div>
-      </main>
-    </div>
-  );
-};
-
-export default Dashboard;
-
-
-
- {/* MODALE DE MODIFICATION */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-[#1e293b] w-full max-w-md rounded-3xl border border-slate-700 shadow-2xl animate-in zoom-in duration-200">
-            <div className="p-6 border-b border-slate-700 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-white">Modifier le compte</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white"><X size={24} /></button>
-            </div>
-            <form onSubmit={handleUpdate} className="p-6 space-y-4">
-              <input type="text" value={editingClient.nom} className="w-full bg-[#0f172a] border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-blue-500" onChange={(e) => setEditingClient({...editingClient, nom: e.target.value})} placeholder="Nom complet" />
-              <input type="email" value={editingClient.mail} className="w-full bg-[#0f172a] border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-blue-500" onChange={(e) => setEditingClient({...editingClient, mail: e.target.value})} placeholder="Email" />
-              <div className="flex gap-3">
-                <button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all"><Save size={18} /> Sauvegarder</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
-
-
-    import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Search, Send, X, Save, Calendar, Info, ArrowRight, Mail, Edit, Trash2, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -172,7 +9,6 @@ const EnvoiList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   
-  // États pour la suppression
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [envoiToDelete, setEnvoiToDelete] = useState(null);
 
@@ -182,7 +18,7 @@ const EnvoiList = () => {
     numRecepteur: '', 
     montant: '', 
     payer_frais_retrait: false, 
-    raison: '' 
+    raison: '' // Initialisé ici
   };
   
   const [formData, setFormData] = useState(emptyEnvoi);
@@ -202,7 +38,7 @@ const EnvoiList = () => {
 
   const fetchSearchByDate = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/envois/search?date=${searchDate}`, { headers });
+      const response = await axios.get(`http://localhost:8080/api/v1/envoi/search?date=${searchDate}`, { headers });
       setEnvois(response.data);
     } catch (err) { console.error("Erreur recherche date"); }
   };
@@ -212,7 +48,6 @@ const EnvoiList = () => {
     else fetchSearchByDate();
   }, [searchDate]);
 
-  // Fonctions d'ouverture des modales
   const openAddModal = () => {
     setIsEditMode(false);
     setFormData(emptyEnvoi);
@@ -230,7 +65,6 @@ const EnvoiList = () => {
     setShowDeleteConfirm(true);
   };
 
-  // Logique de validation (POST ou PUT)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -251,7 +85,6 @@ const EnvoiList = () => {
     }
   };
 
-  // Suppression effective
   const confirmDelete = async () => {
     try {
       await axios.delete(`http://localhost:8080/api/v1/envoi/envoi/${envoiToDelete}/delete`, { headers });
@@ -265,7 +98,6 @@ const EnvoiList = () => {
 
   return (
     <div className="ml-64 p-8 bg-[#0f172a] min-h-screen flex-1 text-slate-200">
-      {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Historique des Envois</h1>
@@ -290,15 +122,15 @@ const EnvoiList = () => {
         </div>
       </div>
 
-      {/* Tableau des Envois */}
       <div className="bg-[#1e293b] rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
         <table className="w-full text-left border-collapse">
           <thead className="bg-slate-800/50 text-slate-400 text-xs uppercase tracking-wider font-bold">
             <tr>
               <th className="px-6 py-4">Expéditeur → Destinateur</th>
               <th className="px-6 py-4 text-emerald-400">Montant</th>
-              <th className="px-6 py-4">Date & Heure</th>
-              <th className="px-6 py-4">Frais Payé ?</th>
+              <th className="px-6 py-4">Date</th>
+              <th className="px-6 py-4">Raison</th>
+              <th className="px-6 py-4">Frais</th>
               <th className="px-6 py-4 text-center">Actions</th>
             </tr>
           </thead>
@@ -314,7 +146,16 @@ const EnvoiList = () => {
                 </td>
                 <td className="px-6 py-4 font-bold text-emerald-500">{envoi.montant.toLocaleString()} Ar</td>
                 <td className="px-6 py-4 text-xs text-slate-400">
-                  {new Date(envoi.date).toLocaleString('fr-FR')}
+                  {new Date(envoi.date).toLocaleString('fr-FR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </td>
+                <td className="px-6 py-4 text-xs text-slate-500 italic max-w-[120px] truncate">
+                  {envoi.raison || "Aucune"} 
                 </td>
                 <td className="px-6 py-4">
                   <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${envoi.payer_frais_retrait ? 'bg-blue-500/10 text-blue-400' : 'bg-slate-700 text-slate-400'}`}>
@@ -323,7 +164,7 @@ const EnvoiList = () => {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex justify-center gap-3">
-                    <button onClick={() => openEditModal(envoi)} className="p-2 bg-blue-500/10 text-blue-400 rounded-lg hover:bg-blue-600 hover:text-white transition-all"><Edit size={16}/></button>
+                    <button onClick={() => openEditModal(envoi)} className="p-2 bg-blue-500/10 text-blue-400 rounded-lg hover:bg-blue-600 hover:text-white transition-all transition-all"><Edit size={16}/></button>
                     <button onClick={() => triggerDelete(envoi.idEnv)} className="p-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition-all"><Trash2 size={16}/></button>
                   </div>
                 </td>
@@ -333,7 +174,6 @@ const EnvoiList = () => {
         </table>
       </div>
 
-      {/* MODALE UNIQUE (AJOUT / MODIF) */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-[#1e293b] w-full max-w-lg rounded-3xl border border-slate-700 shadow-2xl animate-in zoom-in duration-200">
@@ -362,6 +202,17 @@ const EnvoiList = () => {
                 <input required type="number" value={formData.montant} className="w-full bg-[#0f172a] border border-slate-700 rounded-xl p-3 text-emerald-400 font-bold outline-none focus:border-emerald-500 text-lg" onChange={(e) => setFormData({...formData, montant: e.target.value})} />
               </div>
 
+              {/* Champ RAISON ajouté ici */}
+              <div>
+                <label className="text-[10px] uppercase font-bold text-slate-500 ml-1">Raison de l'envoi</label>
+                <textarea 
+                  value={formData.raison} 
+                  className="w-full bg-[#0f172a] border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-emerald-500 h-24 resize-none" 
+                  onChange={(e) => setFormData({...formData, raison: e.target.value})} 
+                  placeholder="Ex: Frais de scolarité, cadeau..."
+                />
+              </div>
+
               <div className="bg-[#0f172a] p-4 rounded-2xl border border-slate-700">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input 
@@ -378,9 +229,9 @@ const EnvoiList = () => {
                 <button 
                   type="submit" 
                   disabled={loading}
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 transition-all"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
                 >
-                  {loading ? "Chargement..." : <><Save size={18} /> {isEditMode ? 'Mettre à jour' : 'Confirmer le transfert'}</>}
+                  {loading ? "Chargement..." : <><Save size={18} /> {isEditMode ? 'Enregistrer les modifications' : 'Confirmer le transfert'}</>}
                 </button>
               </div>
             </form>
@@ -388,7 +239,6 @@ const EnvoiList = () => {
         </div>
       )}
 
-      {/* MODALE DE SUPPRESSION DESIGN */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
           <div className="bg-[#1e293b] w-full max-w-sm rounded-3xl border border-slate-700 shadow-2xl p-8 text-center animate-in zoom-in duration-200">
@@ -397,11 +247,11 @@ const EnvoiList = () => {
             </div>
             <h2 className="text-xl font-bold text-white mb-2">Supprimer l'historique ?</h2>
             <p className="text-slate-400 text-sm mb-8">
-              L'historique de cette transaction sera effacé. Cela ne modifiera pas les soldes actuels des clients.
+              Cette action supprimera uniquement la trace de cette transaction dans l'historique.
             </p>
             <div className="flex gap-3">
               <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 bg-slate-800 text-white font-bold py-3 rounded-xl">Annuler</button>
-              <button onClick={confirmDelete} className="flex-1 bg-red-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-red-600/20">Supprimer</button>
+              <button onClick={confirmDelete} className="flex-1 bg-red-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-red-600/20 transition-all active:scale-95">Supprimer</button>
             </div>
           </div>
         </div>

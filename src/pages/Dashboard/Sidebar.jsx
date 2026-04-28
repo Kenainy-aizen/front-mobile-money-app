@@ -1,16 +1,17 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, Send, Wallet, Settings, FileText, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Send, Wallet, Settings, FileText, LogOut, Option } from 'lucide-react';
 
 const Sidebar = () => {
   const menuItems = [
     { name: 'Dashboard', icon: <LayoutDashboard size={20}/>, path: '/dashboard' },
     { name: 'Clients', icon: <Users size={20}/>, path: '/clients' },
-    { name: 'Envois', icon: <Send size={20}/>, path: '/operations/envoi' },
-    { name: 'Retraits', icon: <Wallet size={20}/>, path: '/operations/retrait' },
-    { name: 'Frais Envoi', icon: <Settings size={20}/>, path: '/frais/envoi' },
-    { name: 'Frais Retrait', icon: <Settings size={20}/>, path: '/frais/retrait' },
+    { name: 'Envois', icon: <Send size={20}/>, path: '/envois' },
+    { name: 'Retraits', icon: <Wallet size={20}/>, path: '/retrait' },
+    { name: 'Frais Envoi', icon: <Settings size={20}/>, path: '/fraisenvoi' },
+    { name: 'Frais Retrait', icon: <Settings size={20}/>, path: '/fraisretrait' },
     { name: 'Relevé PDF', icon: <FileText size={20}/>, path: '/releve' },
+    { name: 'Options', icon: <Option size={20}/>, path: '/option' },
   ];
 
   return (

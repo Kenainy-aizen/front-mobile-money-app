@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Sidebar from './Sidebar'; // Assure-toi que le chemin vers ton fichier Sidebar est correct
 import { 
   ArrowUpRight, 
@@ -8,13 +9,35 @@ import {
   TrendingUp
 } from 'lucide-react';
 
+
+
+
 const Dashboard = () => {
   // Ces données statiques seront remplacées par tes appels API Spring Boot
   // pour calculer la recette totale (somme des frais d'envoi et retrait) 
+
+  const [recette, setRecette] = useState(0);
+  
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  const fetchRecette = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/retrait/recette`, { headers });
+      setRecette(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchRecette();
+  }, []);
+
   const stats = [
     {
       title: "Recette Opérateur",
-      value: "450.000 Ar",
+      value: `${Number(recette).toLocaleString('de-DE')} Ar`,
       detail: "Frais d'envoi + retrait",
       icon: <DollarSign className="text-blue-500" />,
       trend: "+12.5%",

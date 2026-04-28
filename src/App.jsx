@@ -8,7 +8,11 @@ import Register from './pages/Auth/Register';
 import Dashboard from './pages/Dashboard/Dashboard'
 import Sidebar from './pages/Dashboard/Sidebar';
 import ClientList from './pages/Clients/ClientList';
-
+import EnvoiList from './pages/Operations/EnvoiList';
+import RetraitList from './pages/Operations/RetraitList';
+import FraisEnvoiList from './pages/Operations/FraisEnvoiList';
+import FraisRetraitList from './pages/Operations/FraisRetraitList';
+  
 // Composant pour protéger les routes (nécessite une authentification)
 const PrivateRoute = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem('token'); // Vérification du JWT
@@ -22,13 +26,37 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route path="/fraisretrait" element={
+            <div className="flex justify-between">
+              <Sidebar />
+              <FraisRetraitList />
+            </div>
+          } />
+          <Route path="/fraisenvoi" element={
+            <div className="flex justify-between">
+              <Sidebar />
+              <FraisEnvoiList />
+            </div>
+          } />
+          <Route path="/envois" element={
+            <div className="flex justify-between">
+              <Sidebar />
+              <EnvoiList />
+            </div>
+          } />
           <Route path="/clients" element={
             <div className="flex justify-between">
               <Sidebar />
               <ClientList />
             </div>
           } />
-          
+          <Route path="/retrait" element={
+            <div className="flex justify-between">
+              <Sidebar />
+              <RetraitList />
+            </div>
+          } />
+           
           <Route path="/register" element={<Register/>}/>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Navigate to="/login" />} />
