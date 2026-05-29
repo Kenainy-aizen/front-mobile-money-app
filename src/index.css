@@ -1,1 +1,259 @@
 @import "tailwindcss";
+
+/*
+ * ============================================
+ * THEME CONFIGURATION
+ * ============================================
+ * Dark mode is the default (no class needed on <html>).
+ * Switch to light mode by adding class "light" to <html>.
+ *
+ * Usage in components:
+ *   bg-main        → main background
+ *   bg-card        → card/surface background
+ *   bg-element     → interactive element background
+ *   text-primary   → primary text color
+ *   text-secondary → secondary text color
+ *   text-muted     → muted/helper text color
+ *   text-heading   → heading text color
+ *   border-card    → default border color
+ */
+
+/* ===== DARK THEME (default) ===== */
+:root {
+    /* Backgrounds */
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --bg-element: #0f172a;
+    --bg-hover: #334155;
+    --bg-sidebar: #1e293b;
+    --bg-input: #0f172a;
+    --bg-overlay: rgba(0, 0, 0, 0.6);
+
+    /* Text */
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --text-heading: #ffffff;
+
+    /* Borders */
+    --border-card: #334155;
+    --border-input: #334155;
+
+    /* Accents (keep as-is) */
+    --accent-blue: #3b82f6;
+    --accent-purple: #a855f7;
+    --accent-amber: #f59e0b;
+    --accent-emerald: #10b981;
+    --accent-red: #ef4444;
+
+    /* Shadows */
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+
+    /* Table */
+    --bg-table-head: rgba(15, 23, 42, 0.5);
+    --bg-table-row-hover: rgba(51, 65, 85, 0.4);
+    --divide-table: #334155;
+}
+
+/* ===== LIGHT THEME ===== */
+.light {
+    --bg-main: #f1f5f9;
+    --bg-card: #ffffff;
+    --bg-element: #f8fafc;
+    --bg-hover: #e2e8f0;
+    --bg-sidebar: #ffffff;
+    --bg-input: #ffffff;
+    --bg-overlay: rgba(0, 0, 0, 0.3);
+
+    --text-primary: #334155;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --text-heading: #0f172a;
+
+    --border-card: #e2e8f0;
+    --border-input: #cbd5e1;
+
+    --shadow-card:
+        0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+    --bg-table-head: rgba(241, 245, 249, 0.8);
+    --bg-table-row-hover: rgba(241, 245, 249, 0.6);
+    --divide-table: #e2e8f0;
+}
+
+/*
+ * ============================================
+ * THEME UTILITY CLASSES
+ * ============================================
+ * These map CSS variables to short utility names
+ * that replace the hardcoded Tailwind values.
+ */
+
+/* Backgrounds */
+.bg-main {
+    background-color: var(--bg-main);
+}
+.bg-card {
+    background-color: var(--bg-card);
+}
+.bg-element {
+    background-color: var(--bg-element);
+}
+.bg-hover {
+    background-color: var(--bg-hover);
+}
+.bg-sidebar {
+    background-color: var(--bg-sidebar);
+}
+.bg-input {
+    background-color: var(--bg-input);
+}
+.bg-overlay {
+    background-color: var(--bg-overlay);
+}
+.bg-table-head {
+    background-color: var(--bg-table-head);
+}
+.bg-table-row-hover {
+    background-color: var(--bg-table-row-hover);
+}
+
+/* Text colors */
+.text-primary {
+    color: var(--text-primary);
+}
+.text-secondary {
+    color: var(--text-secondary);
+}
+.text-muted {
+    color: var(--text-muted);
+}
+.text-heading {
+    color: var(--text-heading);
+}
+
+/* Borders */
+.border-card {
+    border-color: var(--border-card);
+}
+.border-input {
+    border-color: var(--border-input);
+}
+
+/* Divides */
+.divide-card {
+    border-color: var(--divide-table);
+}
+
+/* Shadows */
+.shadow-card {
+    box-shadow: var(--shadow-card);
+}
+.shadow-card-lg {
+    box-shadow: var(--shadow-lg);
+}
+
+/*
+ * ============================================
+ * GLOBAL STYLES
+ * ============================================
+ */
+
+/* Smooth transitions on theme change */
+*,
+*::before,
+*::after {
+    transition-property: background-color, border-color, color, box-shadow;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+}
+
+/* Selection */
+::selection {
+    background-color: #3b82f6;
+    color: #ffffff;
+}
+
+/* Scrollbar for dark/light themes */
+:root {
+    scrollbar-color: #334155 transparent;
+}
+
+.light {
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+/* Custom scrollbar for webkit */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+}
+
+:root ::-webkit-scrollbar-thumb {
+    background: #334155;
+}
+
+.light ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+}
+
+/*
+ * ============================================
+ * ANIMATIONS
+ * ============================================
+ */
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+}
+
+@keyframes pulse-dot {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.4;
+    }
+}
+
+.animate-pulse-dot {
+    animation: pulse-dot 2s ease-in-out infinite;
+}
